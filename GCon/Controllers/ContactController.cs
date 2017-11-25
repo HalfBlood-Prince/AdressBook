@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using GCon.Models;
 using GCon.ViewModels;
+using System.Data.Entity;
 
 namespace GCon.Controllers
 {
@@ -20,14 +21,14 @@ namespace GCon.Controllers
             _context.Dispose();
         }
 
-
         // GET: Contacts/ContactList/id
         public ActionResult ContactList(int id)
         {
             var viewModel = new ContactListViewModel
             {
                 Id = id,
-                Contacts = _context.Contacts.Where(c => c.AddressGroupId == id)
+                Contacts = _context.Contacts.Where(c => c.AddressGroupId == id),
+                AddressGroupName = _context.AddressGroups.SingleOrDefault(add => add.Id == id).Name
             };
 
             return View(viewModel);
@@ -38,7 +39,8 @@ namespace GCon.Controllers
             var viewModel = new NewContactViewModel
             {
                 Id = id,
-                Contact = new Contact()
+                Contact = new Contact(),
+                AddressGroupName = _context.AddressGroups.SingleOrDefault(add => add.Id == id).Name
             };
 
             return View(viewModel);
@@ -79,11 +81,12 @@ namespace GCon.Controllers
 
         public ActionResult Edit(int id)
         {
-            var contactInDb = _context.Contacts.SingleOrDefault(c => c.Id == id);
+            var contactInDb = _context.Contacts.Include(c => c.AddressGroup).SingleOrDefault(c => c.Id == id);
             var viewModel = new NewContactViewModel
             {
                 Id = contactInDb.AddressGroupId,
-                Contact = contactInDb
+                Contact = contactInDb,
+                AddressGroupName = contactInDb.AddressGroup.Name
             };
 
             return View("NewContact", viewModel);

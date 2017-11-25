@@ -10,5 +10,7 @@ namespace GCon.ViewModels
     {
         public int Id { get; set; }
         public IEnumerable<Contact> Contacts { get; set; }
+        public string AddressGroupName { get; set; }  
+
     }
 }

@@ -6,7 +6,7 @@
 }
 
 <h2>New Contact</h2>
-
+<h3>@Html.ActionLink(Model.AddressGroupName,"ContactList",new { id = Model.Id})</h3>
 @using (Html.BeginForm("SaveContact","Contact",new { id = Model.Id}))
 {
     <div class="form-group">

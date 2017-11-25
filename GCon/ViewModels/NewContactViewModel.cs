@@ -6,5 +6,6 @@ namespace GCon.ViewModels
     {
         public int Id { get; set; }
         public Contact Contact { get; set; }
+        public string AddressGroupName { get; set; }
     }
 }
