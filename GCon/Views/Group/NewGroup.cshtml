@@ -1,0 +1,32 @@
+﻿@model GCon.ViewModels.AddressGroupViewModel
+
+@{
+    ViewBag.Title = "NewGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New Group</h2>
+
+@using (Html.BeginForm("Save","Group"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.AddressGroup.Name)
+        @Html.TextBoxFor(m => m.AddressGroup.Name,new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.AddressGroup.Name)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(m => m.AddressGroup.AddressGroupTypeId)
+        @Html.DropDownListFor(m => m.AddressGroup.AddressGroupTypeId,new SelectList(Model.AddressGroupTypes,"Id","Name"),"Select a Type",new { @class="form-control"})
+        @Html.ValidationMessageFor(m => m.AddressGroup.AddressGroupTypeId)
+    </div>
+    
+    @Html.HiddenFor(m => m.AddressGroup.Id)
+    @Html.AntiForgeryToken()
+    <input type="submit" value="Save" class="btn btn-primary"/>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundels/jqueryval")
+}

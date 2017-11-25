@@ -1,0 +1,80 @@
+﻿@using GCon.Models
+@model GCon.ViewModels.ContactListViewModel
+
+
+@{
+    ViewBag.Title = "ContactList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ContactList</h2>
+
+@Html.ActionLink("New Contact","NewContact",new {id = @Model.Id},new {@class="btn btn-primary"}) <br/> <br/>
+
+<table class="table table-bordered table-hover" id="contact">
+    <thead>
+    <tr>
+        <th>Contact Name</th>
+        <th>Email</th>
+        <th>Phone Numer</th>
+        <th>Address</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+   <tbody> 
+    @foreach (Contact contact in Model.Contacts)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(contact.Name,"Edit",new {id = contact.Id})
+            </td>
+            <td>
+                @contact.Email
+            </td>
+            <td>
+                @contact.PhoneNumber
+            </td>
+            <td>
+                @contact.Address
+            </td>
+            <td>
+                <button class="btn btn-link js-delete" data-contact-id="@contact.Id">Delete</button>
+            </td>
+        </tr>
+    }
+   </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            var table = $("#contact").DataTable();
+
+            $("#contact").on("click", ".js-delete", function() {
+
+                var button = $(this);
+
+                bootbox.confirm("Are You Sure To Delete This", function(result) {
+                    
+                    if (result) {
+                        $.ajax({
+                            
+                            url: "/api/contacts/" + button.attr("data-contact-id"),
+                            method: "DELETE",
+                            success: function () {
+
+                                table.row(button.parents("tr")).remove().draw();
+                                
+                            }
+                        });
+
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

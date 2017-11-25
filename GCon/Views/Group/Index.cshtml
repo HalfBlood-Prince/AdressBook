@@ -1,0 +1,67 @@
+﻿@using GCon.Models
+@model IEnumerable<AddressGroup>
+           
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Address Book</h2>
+
+@Html.ActionLink("New Book","NewGroup",null,new {@class="btn btn-primary"})
+<br/> <br/>
+<table class="table table-bordered table-hover" id="group" style="text-align: center">
+    <thead>
+        <tr >
+            <th style="text-align: center">Book Name</th>
+            <th style="text-align: center">Book Type</th>
+            <th style="text-align: center">Action</th>
+
+        </tr>
+    </thead>
+    
+    @foreach (AddressGroup addressGroup in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink(addressGroup.Name,"ContactList","Contact",new {id = addressGroup.Id},null)</td>
+            <td>@addressGroup.AddressGroupType.Name</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = addressGroup.Id }, new { @class = "btn btn-link" }) | <button class="btn btn-link js-delete" data-add-id="@addressGroup.Id">Delete</button>
+            </td>
+        </tr>
+    }
+
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            var table = $("#group").DataTable();
+
+            $("#group").on("click", ".js-delete", function() {
+
+                var button = $(this);
+                
+                bootbox.confirm("Are You Sure To Delete This", function (result) {
+
+                    if (result) {
+
+                        $.ajax({
+
+                            url: "/api/AddressGroups/" + button.attr("data-add-id"),
+                            method: "DELETE",
+                            success: function() {
+
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+}
